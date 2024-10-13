@@ -7,7 +7,7 @@ import java.sql.*;
 
 public class App {
     public String getGreeting() {
-        return "Hello World, this sharmarke";
+        return "Hello World, this ";
     }
     static final String QUERY = "select  * from cars";
 
