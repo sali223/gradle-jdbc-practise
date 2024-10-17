@@ -9,6 +9,7 @@ public class App {
 
     static final String QUERY = "SELECT * FROM cars";
     static final String INSERT_SQL = "INSERT INTO cars (make, model, year) VALUES (?, ?, ?)";
+    static final String DELETE_SQL = "DELETE FROM cars WHERE id = ?";
 
     static final String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
     static final String USER = "postgres";
