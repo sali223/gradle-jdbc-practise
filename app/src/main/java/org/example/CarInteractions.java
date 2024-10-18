@@ -10,6 +10,7 @@ import static org.example.App.DB_URL;
 
 // create function to get by car make
 
+
 // Method to insert a car into the database
 
     // Method to insert a car into the database

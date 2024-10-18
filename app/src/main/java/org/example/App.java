@@ -1,5 +1,7 @@
 package org.example;
 
+import org.checkerframework.common.reflection.qual.GetClass;
+
 import java.sql.*;
 
 public class App {
@@ -10,6 +12,12 @@ public class App {
     static final String QUERY = "SELECT * FROM cars";
     static final String INSERT_SQL = "INSERT INTO cars (make, model, year) VALUES (?, ?, ?)";
     static final String DELETE_SQL = "DELETE FROM cars WHERE id = ?";
+    static final String Get_carbyMake = "SELECT * FROM cars WHERE make = ?";
+    static final String Get_carbyModel = "SELECT * FROM cars WHERE model = ?";
+    static final String Get_carbyYear = "SELECT * FROM cars WHERE year = ?";
+    static final String Get_carbyID = "SELECT * FROM cars WHERE id = ?";
+    static final String Update_carbyId = "UPDATE cars SET model = ?, year = ? WHERE id = ?";
+    static final String Delete_carbyId = "DELETE FROM cars WHERE id = ?";
 
     static final String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
     static final String USER = "postgres";
@@ -30,6 +38,8 @@ public class App {
             insertCar(connection, INSERT_SQL, "Volkswagen", "Golf", 2022);
             insertCar(connection, INSERT_SQL, "Peugeot", "206", 2021);
             insertCar(connection, INSERT_SQL, "Honda", "HRV", 2024);
+            insertCar(connection, INSERT_SQL, "Geo", "Metro", 1985);
+            insertCar(connection, INSERT_SQL, "Land", "Rover", 2025);
 
             // Querying all cars
             Statement statement = connection.createStatement();
