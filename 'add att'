@@ -1,0 +1,138 @@
+package org.example;
+
+
+// create function to insert into 'cars' table
+
+import java.sql.*;
+// create function to insert into 'cars' table
+
+import java.sql.*;
+import java.util.concurrent.ExecutionException;
+
+import static org.example.App.DB_URL;
+
+// create function to get by car make
+
+
+// Method to insert a car into the database
+
+// Method to insert a car into the database
+// create function to get by car model
+//
+// public class CarInteractions {
+
+
+
+// create function to update car by make model year
+
+// create function to delete car by make model year{
+// Predefined lists of car makes and models
+
+
+
+
+
+// Query car by make
+
+
+// Delete car by ID
+
+
+
+
+
+
+import java.sql.*;
+
+public class CarInteractions {
+    static final String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
+    static final String USER = "postgres";
+    static final String PASS = "admin";
+
+    // SQL Queries as Constants
+    private static final String INSERT_SQL = "INSERT INTO cars (make, model, year) VALUES (?, ?, ?)";
+    private static final String GET_CAR_BY_MAKE = "SELECT * FROM cars WHERE make = ?";
+    private static final String GET_CAR_BY_MODEL = "SELECT * FROM cars WHERE model = ?";
+    private static final String UPDATE_CAR_BY_MAKE_MODEL_YEAR = "UPDATE cars SET year = ? WHERE make = ? AND model = ?";
+    private static final String DELETE_CAR_BY_MAKE_MODEL_YEAR = "DELETE FROM cars WHERE make = ? AND model = ? AND year = ?";
+
+    // Method to insert a car into the database
+    public static void insertCar(String make, String model, int year) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement pstmt = conn.prepareStatement(INSERT_SQL)) {
+            pstmt.setString(1, make);
+            pstmt.setString(2, model);
+            pstmt.setInt(3, year);
+            int affectedRows = pstmt.executeUpdate();
+            System.out.println("New car inserted successfully. Rows affected: " + affectedRows);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method to get cars by make
+    public static void getCarByMake(String make) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement pstmt = conn.prepareStatement(GET_CAR_BY_MAKE)) {
+            pstmt.setString(1, make);
+            try (ResultSet resultSet = pstmt.executeQuery()) {
+                System.out.println("Cars with make '" + make + "':");
+                while (resultSet.next()) {
+                    System.out.println("ID: " + resultSet.getInt("id") +
+                            ", Make: " + resultSet.getString("make") +
+                            ", Model: " + resultSet.getString("model") +
+                            ", Year: " + resultSet.getInt("year"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method to get cars by model
+    public static void getCarByModel(String model) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement pstmt = conn.prepareStatement(GET_CAR_BY_MODEL)) {
+            pstmt.setString(1, model);
+            try (ResultSet resultSet = pstmt.executeQuery()) {
+                System.out.println("Cars with model '" + model + "':");
+                while (resultSet.next()) {
+                    System.out.println("ID: " + resultSet.getInt("id") +
+                            ", Make: " + resultSet.getString("make") +
+                            ", Model: " + resultSet.getString("model") +
+                            ", Year: " + resultSet.getInt("year"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method to update car by make, model, and year
+    public static void updateCarYearByMakeModel(String make, String model, int newYear) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement pstmt = conn.prepareStatement(UPDATE_CAR_BY_MAKE_MODEL_YEAR)) {
+            pstmt.setInt(1, newYear);
+            pstmt.setString(2, make);
+            pstmt.setString(3, model);
+            int affectedRows = pstmt.executeUpdate();
+            System.out.println("Car updated successfully. Rows affected: " + affectedRows);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method to delete car by make, model, and year
+    public static void deleteCarByMakeModelYear(String make, String model, int year) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement pstmt = conn.prepareStatement(DELETE_CAR_BY_MAKE_MODEL_YEAR)) {
+            pstmt.setString(1, make);
+            pstmt.setString(2, model);
+            pstmt.setInt(3, year);
+            int affectedRows = pstmt.executeUpdate();
+            System.out.println("Car deleted successfully. Rows affected: " + affectedRows);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
