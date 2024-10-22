@@ -1,0 +1,99 @@
+package org.example;
+
+import java.sql.*;
+import java.util.Scanner;
+
+public class App {
+    static final String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
+    static final String USER = "postgres";
+    static final String PASS = "admin";
+
+    public static void main(String[] args) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)) {
+            System.out.println("Connected to the PostgreSQL server successfully.");
+
+            Scanner scanner = new Scanner(System.in);
+            while (true) {
+                System.out.println("Choose an option:");
+                System.out.println("1. Add a new car");
+                System.out.println("2. View all cars");
+                System.out.println("3. Delete a car");
+                System.out.println("4. Exit");
+
+                int choice = scanner.nextInt();
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter car make: ");
+                        String make = scanner.nextLine();
+                        System.out.print("Enter car model: ");
+                        String model = scanner.nextLine();
+                        System.out.print("Enter car year: ");
+                        int year = scanner.nextInt();
+                        insertCar(connection, make, model, year);
+                        break;
+                    case 2:
+                        getAllCars(connection);
+                        break;
+                    case 3:
+                        System.out.print("Enter car ID to delete: ");
+                        int id = scanner.nextInt();
+                        deleteCar(connection, id);
+                        break;
+                    case 4:
+                        System.out.println("Exiting...");
+                        return;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error connecting to the database: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void insertCar(Connection conn, String make, String model, int year) {
+        String sql = "INSERT INTO cars (make, model, year) VALUES (?, ?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, make);
+            pstmt.setString(2, model);
+            pstmt.setInt(3, year);
+            pstmt.executeUpdate();
+            System.out.println("New car record inserted successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error inserting car: " + e.getMessage());
+        }
+    }
+
+    public static void getAllCars(Connection conn) {
+        String sql = "SELECT * FROM cars";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            System.out.println("Cars in the database:");
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String make = rs.getString("make");
+                String model = rs.getString("model");
+                int year = rs.getInt("year");
+                System.out.printf("ID: %d, Make: %s, Model: %s, Year: %d%n", id, make, model, year);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving cars: " + e.getMessage());
+        }
+    }
+
+    public static void deleteCar(Connection conn, int id) {
+        String sql = "DELETE FROM cars WHERE id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("Car deleted successfully.");
+            } else {
+                System.out.println("No car found with ID: " + id);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error deleting car: " + e.getMessage());
+        }
+    }
+}
